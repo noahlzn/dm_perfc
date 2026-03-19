@@ -37,6 +37,24 @@ int est_abr_naif(Arbre a, long long *nb_visites){
     return est_abr_naif(a->fg, nb_visites) && est_abr_naif(a->fd, nb_visites);
 }
 
+int infixe_croissant(Arbre a, Noeud **dernier_noeud, long long *nb_visites) {
+    if (a == NULL)
+        return 1;
+    if (!infixe_croissant(a->fg, dernier_noeud, nb_visites))
+        return 0;
+    (*nb_visites)++;
+    if (*dernier_noeud != NULL && (*dernier_noeud)->valeur >= a->valeur)
+        return 0;
+    *dernier_noeud = a;
+    return infixe_croissant(a->fd, dernier_noeud, nb_visites);
+}
+
+int est_abr_infixe(Arbre a, long long *nb_visites) {
+    Noeud *dernier_noeud = NULL;
+    *nb_visites = 0;
+    return infixe_croissant(a, &dernier_noeud, nb_visites);
+}
+
 int est_abr_definition_aux(Arbre a, int *min, int *max, long long *nb_visites){
     if (a == NULL)
         return 1;
