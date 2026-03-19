@@ -5,23 +5,34 @@
 
 
 int construit_quelconque(Arbre *a, int **codage, int n) {
-    if (n == 0) return 1;
+    // sous-arbre vide
+    if (**codage == -1) {
+        *a = NULL;
+        (*codage)++;
+        return 1;
+    }
     *a = alloue_noeud(**codage);
     if (*a == NULL) return 0;
-    (*codage)++;  // consomme le nœud courant
-    n--;
-    if (n > 0 && **codage < (*a)->valeur)
-        construit_quelconque(&(*a)->fg, codage, n);
-    else
-        construit_quelconque(&(*a)->fd, codage, n);
+    (*codage)++;
+    // Récursion gauche
+    if (!construit_quelconque(&(*a)->fg, codage, n)) {
+        libere_arbre(*a); // libère ce qui a été alloué
+        *a = NULL;
+        return 0;
+    }
+    // Récursion droite
+    if (!construit_quelconque(&(*a)->fd, codage, n)) {
+        libere_arbre(*a);
+        *a = NULL;
+        return 0;
+    }
     return 1;
 }
 
 int main() {
     Arbre a = NULL;
-    int codage[10] = {1, 2, 4, 8, 9, 5, 10, 3, 6, 7};
+    int codage[] = {1, 2, -1, -1, 3, -1, -1};
     int *ptr = codage;
-    construit_quelconque(&a, &ptr, 10);
-    printf("%d \n", a->valeur);
+    construit_quelconque(&a, &ptr, 3);
     return 0;
 }
