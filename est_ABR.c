@@ -58,11 +58,8 @@ int est_abr_infixe(Arbre a, long long *nb_visites) {
 int est_abr_definition_aux(Arbre a, int *min, int *max, long long *nb_visites){
     if (a == NULL)
         return 1;
-
     (*nb_visites)++;
-
     int minG, maxG, minD, maxD;
-
     //sous arbre gauche
     if (a->fg != NULL){
         if (!est_abr_definition_aux(a->fg, &minG, &maxG, nb_visites))
@@ -70,7 +67,6 @@ int est_abr_definition_aux(Arbre a, int *min, int *max, long long *nb_visites){
         if (maxG > a->valeur)
             return 0;
     }
-
     //sous arbre droit
     if (a->fd != NULL){
         if (!est_abr_definition_aux(a->fd, &minD, &maxD, nb_visites))
@@ -78,19 +74,31 @@ int est_abr_definition_aux(Arbre a, int *min, int *max, long long *nb_visites){
         if (minD < a->valeur)
             return 0;
     }
-
     if (a->fg != NULL)
         *min = minG;
     else
         *min = a->valeur;
-
     if (a->fd != NULL)
         *max = maxD;
     else
         *max = a->valeur;
-
     return 1;
+}
 
+int infixe_croissant(Arbre a, Noeud **dernier_noeud) {
+    if (a == NULL)
+        return 1;
+    if (!infixe_croissant(a->fg, dernier_noeud))
+        return 0;
+    if (*dernier_noeud != NULL && (*dernier_noeud)->valeur >= a->valeur)
+        return 0;
+    *dernier_noeud = a;
+    return infixe_croissant(a->fd, dernier_noeud);
+}
+
+int est_abr_infixe(Arbre a) {
+    Noeud *dernier_noeud = NULL;
+    return infixe_croissant(a, &dernier_noeud);
 }
 
 int main(){
