@@ -14,6 +14,14 @@ static Arbre alloue_noeud(int val){
     return a;
 }
 
+
+void libere_arbre(Arbre a) {
+    if (a == NULL) return;
+    libere_arbre(a->fg);
+    libere_arbre(a->fd);
+    free(a);
+}
+
 static int abr_min(Arbre a){
     while (a->fg != NULL)
         a = a->fg;
