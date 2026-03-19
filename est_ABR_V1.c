@@ -36,10 +36,23 @@ int est_abr_naif(Arbre a){
 }
 
 int est_abr_definition_aux(Arbre a, int *min, int *max){
-    if (a == NULL)
-        return 1;
-    
+    if (!est_abr_naif(a))
+        return 0;
 
+    int vraimin = abr_min(a);
+    int vraimax = abr_max(a);
+
+    if (vraimin != *min)
+        *min = vraimin;
+    if (vraimax != *max)
+        *max = vraimax;
+    return 1;
+}
+
+int est_abr_definition(Arbre a){
+    int min;
+    int max;
+    return est_abr_definition_aux(a,&min,&max);
 }
 
 int main(){
@@ -47,5 +60,6 @@ int main(){
     a->fd = alloue_noeud(3);
     a->fg = alloue_noeud(4);
     printf("est abr : %d \n", est_abr_naif(a));
+    printf("est abr full : %d \n", est_abr_naif(a));
     return 0;
 }

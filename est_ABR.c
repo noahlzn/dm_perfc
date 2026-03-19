@@ -37,6 +37,44 @@ int est_abr_naif(Arbre a, long long *nb_visites){
     return est_abr_naif(a->fg, nb_visites) && est_abr_naif(a->fd, nb_visites);
 }
 
+int est_abr_definition_aux(Arbre a, int *min, int *max, long long *nb_visites){
+    if (a == NULL)
+        return 1;
+
+    (*nb_visites)++;
+
+    int minG, maxG, minD, maxD;
+
+    //sous arbre gauche
+    if (a->fg != NULL){
+        if (!est_abr_definition_aux(a->fg, &minG, &maxG, nb_visites))
+            return 0;
+        if (maxG > a->valeur)
+            return 0;
+    }
+
+    //sous arbre droit
+    if (a->fd != NULL){
+        if (!est_abr_definition_aux(a->fd, &minD, &maxD, nb_visites))
+            return 0;
+        if (minD < a->valeur)
+            return 0;
+    }
+
+    if (a->fg != NULL)
+        *min = minG;
+    else
+        *min = a->valeur;
+
+    if (a->fd != NULL)
+        *max = maxD;
+    else
+        *max = a->valeur;
+
+    return 1;
+
+}
+
 int main(){
     long long nb_visites = 0;
     Arbre a = alloue_noeud(5);
@@ -46,3 +84,4 @@ int main(){
     printf("est abr : %d \nnb visites : %lld \n", est_abr_naif(a, &nb_visites), nb_visites);
     return 0;
 }
+
