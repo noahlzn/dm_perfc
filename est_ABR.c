@@ -1,34 +1,16 @@
 /* est_ABR.c */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "est_ABR.h"
+#include "genere_arbre_binaire.h"
 
-static Arbre alloue_noeud(int val){
-    Arbre a = malloc(sizeof(Noeud));
-    if (a != NULL){
-        a->valeur = val;
-        a->fg = NULL;
-        a->fd = NULL;
-    }
-    return a;
-}
-
-
-void libere_arbre(Arbre a) {
-    if (a == NULL) return;
-    libere_arbre(a->fg);
-    libere_arbre(a->fd);
-    free(a);
-}
-
-static int abr_min(Arbre a){
+int abr_min(Arbre a){
     while (a->fg != NULL)
         a = a->fg;
     return a->valeur;
 }
 
-static int abr_max(Arbre a){
+int abr_max(Arbre a){
     while (a->fd != NULL)
         a = a->fd;
     return a->valeur;
@@ -118,4 +100,3 @@ int main(){
     printf("est abr : %d \nnb visites : %lld \n", est_abr_naif(a, &nb_visites), nb_visites);
     return 0;
 }
-

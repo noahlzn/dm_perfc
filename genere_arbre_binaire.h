@@ -5,6 +5,11 @@
 
 #include "est_ABR.h"
 
+/* Alloue de l'espace en memoire pour un arbre et lui assigne val en etiquette */
+Arbre alloue_noeud(int val);
+
+/* Libere l'espace memoire alloue */
+void libere_arbre(Arbre a);
 
 /* construit un arbre binaire de taille n à partir de son codage*/
 int construit_quelconque(Arbre * a, int ** codage, int n);
@@ -14,6 +19,6 @@ de noeuds total */
 int nb_noeuds_gauche(int n);
 
 /* Renvoie un tableau du parcours prefixe d'un arbre à partir de son parcours infixe */
-void parcours_infixe_2_prefixe_presque_complet(int *prefixe, int *infixe, int n)
+void parcours_infixe_2_prefixe_presque_complet(int *prefixe, int *infixe, int n);
 
 #endif
