@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <maths.h>
+#include <math.h>
 #include "est_ABR.h"
 #include "genere_arbre_binaire.h"
 
@@ -29,12 +29,6 @@ int construit_quelconque(Arbre *a, int **codage, int n) {
     }
     return 1;
 }
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include "est_ABR.h"
-#include "genere_arbre_binaire.h"
 
 int construit_quelconque(Arbre *a, int **codage, int n) {
     // sous arbre vide
