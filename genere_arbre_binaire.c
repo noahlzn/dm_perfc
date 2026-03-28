@@ -53,12 +53,10 @@ int nb_noeuds_gauche(int n){
     if (n <= 1) {
         return 0;
     }
-
     int h = (int)floor(log2(n));
     int ni = pow(2, h) - 1; // nb noeud interne
     int nf = n - ni; // nb feuilles
     int max_feuilles_gauche = pow(2, h - 1);
-
     // si le nombre de feuilles est inferieur au max alors elles sont à gauche
     int feuilles_gauche;
     if (nf < max_feuilles_gauche){
@@ -67,10 +65,8 @@ int nb_noeuds_gauche(int n){
         // sinon ça déborde à droite
         feuilles_gauche = max_feuilles_gauche;
     }
-
     int ni_gauche = pow(2, h - 1) - 1;
     int noeuds_gauche = ni_gauche + feuilles_gauche;
-
     return noeuds_gauche;
 }
 
@@ -100,18 +96,62 @@ void parcours_infixe_2_prefixe_quelconque_aleatoire(int *codage, int *infixe, in
     parcours_infixe_2_prefixe_quelconque_aleatoire(codage + 1 + (2*k+1), infixe + k+1, n-k-1);
 }
 
-
-int main(void){
-    srand(time(NULL));
-    int infixe[] = {8, 4, 9, 2, 10, 5, 1, 6, 3, 7};
-    int prefixe[10];
-
-    parcours_infixe_2_prefixe_quelconque_aleatoire(prefixe, infixe, 10);
-
-    for (int i = 0; i < 10; i++){
-        printf("%d ", prefixe[i]);
-    }
-
-    printf("\n");
+static int trie(const void *a, const void *b){
+    int x = *(int*)a;
+    int y = *(int*)b;
+    if (x < y) return -1;
+    if (x > y) return 1;
     return 0;
+}
+
+static void creer_tab_infixe_trie(int tab[], int taille){
+    for (int i=0; i<taille; i++)
+        tab[i] = rand() % (taille * 10);
+    qsort(tab, taille, sizeof(int), trie);
+    for (int i=1; i<taille; i++)
+        if (tab[i] <= tab[i-1])
+            tab[i] = tab[i-1] + 1;
+}
+
+static void creer_tab_infixe_non_trie(int tab[], int taille){
+    for (int i=0; i<taille; i++)
+        tab[i] = rand() % (taille * 10);
+}
+
+static void prefixe_vers_codage(int *codage, int *prefixe, int n){
+    if (n == 0){
+        codage[0] = -1;
+        return;
+    }
+    int k = nb_noeuds_gauche(n);
+    codage[0] = prefixe[0];
+    prefixe_vers_codage(codage + 1, prefixe + 1, k);
+    prefixe_vers_codage(codage + 1 + (2*k+1), prefixe + 1 + k, n-k-1);
+}
+
+static int presque_complet_alea(Arbre *a, int taille, int est_abr){
+    int *infixe = malloc(sizeof(int)*taille);
+    if (infixe == NULL) return -1;
+    if (est_abr)
+        creer_tab_infixe_trie(infixe, taille);
+    else
+        creer_tab_infixe_non_trie(infixe, taille);
+    int *prefixe = malloc(sizeof(int)*taille);
+    if (prefixe == NULL){ free(infixe); return -1; }
+    parcours_infixe_2_prefixe_presque_complet(prefixe, infixe, taille);
+    int *codage = malloc(sizeof(int)*(taille*2+1));
+    if (codage == NULL){ free(infixe); free(prefixe); return -1; }
+    prefixe_vers_codage(codage, prefixe, taille);
+    int *tmp = codage;
+    int res = construit_quelconque(a, &tmp, taille);
+    free(infixe); free(prefixe); free(codage);
+    return res;
+}
+
+int ABR_presque_complet_alea(Arbre *a, int taille){
+    return presque_complet_alea(a, taille, 1);
+}
+
+int non_ABR_presque_complet_alea(Arbre *a, int taille){
+    return presque_complet_alea(a, taille, 0);
 }
