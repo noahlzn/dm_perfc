@@ -21,11 +21,16 @@ int nb_noeuds_gauche(int n);
 /* Renvoie un tableau du parcours prefixe d'un arbre à partir de son parcours infixe */
 void parcours_infixe_2_prefixe_presque_complet(int *prefixe, int *infixe, int n);
 
-
 /* Crée aléatoirement un arbre binaire de recherche presque complet */
 int ABR_presque_complet_alea(Arbre * a, int taille);
 
 /*  Crée aléatoirement un arbre presque complet */
 int non_ABR_presque_complet_alea(Arbre * a, int taille);
+
+/* */
+int ABR_quelconque_alea(Arbre * a, int taille);
+
+/**/
+int non_ABR_quelconque_alea(Arbre * a, int taille);
 
 #endif

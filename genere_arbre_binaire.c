@@ -213,3 +213,20 @@ int ABR_quelconque_alea(Arbre *a, int taille){
     free(infixe); free(codage);
     return res;
 }
+
+int non_ABR_quelconque_alea(Arbre *a, int taille){
+    int *infixe = malloc(sizeof(int)*taille);
+    if (infixe == NULL)
+        return -1;
+    creer_tab_infixe_non_trie(infixe, taille);  // infixe non trié
+    int *codage = malloc(sizeof(int)*(taille*2+1));
+    if (codage == NULL){
+        free(infixe);
+        return -1;
+    }
+    parcours_infixe_2_prefixe_quelconque_aleatoire(codage, infixe, taille);
+    int *tmp = codage;
+    int res = construit_quelconque(a, &tmp, taille);
+    free(infixe); free(codage);
+    return res;
+}
