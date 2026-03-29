@@ -69,6 +69,26 @@ int nb_noeuds_gauche(int n){
     return noeuds_gauche;
 }
 
+int infixe_vers_codage_filiforme(int *codage, int *infixe, int n) { //sert pour filiforme
+    if (n == 0) {
+        codage[0] = -1;
+        return 1;//1seule case d'ecrite
+    }
+    int rd = rand() % 2;
+    if (rd == 1) { //enfant à droite
+        codage[0] = infixe[0];
+        codage[1] = -1;  //pas de fils gauche
+        int taille = infixe_vers_codage_filiforme(codage + 2, infixe + 1, n - 1);
+        return 2 + taille; 
+    } else { //enfant à gauche
+        codage[0] = infixe[n-1];
+        int taille = infixe_vers_codage_filiforme(codage + 1, infixe, n - 1);
+        codage[1 + taille] = -1;  //pas de fils droit
+        return 1 + taille + 1;
+    }
+}
+
+
 void parcours_infixe_2_prefixe_presque_complet(int *prefixe, int *infixe, int n){
     if (n == 0)
         return;
@@ -255,23 +275,16 @@ int filiforme_alea(Arbre *a, int taille, int est_abr){
         creer_tab_infixe_trie(infixe, taille);
     else
         creer_tab_infixe_non_trie(infixe, taille);
-    int *prefixe = malloc(sizeof(int)*taille);
-    if (prefixe == NULL){
-         free(infixe); 
-         return -1; 
-    }
-    parcours_infixe_2_prefixe_filiforme_aleatoire(prefixe, infixe, taille);
+    //plus besoin de prefixe ici
     int *codage = malloc(sizeof(int)*(taille*2+1));
     if (codage == NULL){
         free(infixe);
-        free(prefixe);
         return -1;
     }
-    prefixe_vers_codage(codage, prefixe, taille);
+    infixe_vers_codage_filiforme(codage, infixe, taille);
     int *tmp = codage;
     int res = construit_quelconque(a, &tmp, taille);
     free(infixe);
-    free(prefixe);
     free(codage);
     return res;
 }
