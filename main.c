@@ -31,7 +31,7 @@ void genere_dot(Arbre a, const char *nom_fichier){
 int main(){
     srand(time(NULL));
     Arbre a;
-    ABR_quelconque_alea(&a, 50);
+    non_ABR_filiforme_alea(&a, 50);
     if (a == NULL)
         printf("arbre NULL\n");
     else
